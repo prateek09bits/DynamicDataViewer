@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="Dynamic Object Explorer">
+        <div class="slds-m-around_medium">
+            <!-- Object Selector -->
+            <lightning-combobox
+                name="objectSelector"
+                label="Select Object"
+                value={selectedObject}
+                placeholder="Select an Object"
+                options={objectOptions}
+                onchange={handleObjectChange}>
+            </lightning-combobox>
+
+            <!-- Button to open Field Selector Modal -->
+            <template if:true={selectedObject}>
+                <lightning-button
+                    class="slds-m-top_small"
+                    label="Select Fields"
+                    variant="brand"
+                    onclick={openFieldModal}>
+                </lightning-button>
+            </template>
+
+            <!-- Data Table -->
+            <template if:true={data.length}>
+               <lightning-datatable
+    key-field="Id"
+    data={data}
+    columns={columns}
+    draft-values={draftValues}
+    onsave={handleSave}
+    onloadmore={handleLoadMore}
+    enable-infinite-loading
+    is-loading={isLoading}> 
+</lightning-datatable>
+
+            </template>
+
+            <!-- No Records -->
+            <template if:true={noRecords}>
+                <p class="slds-text-color_error slds-m-top_medium">⚠ No records found for this object.</p>
+            </template>
+        </div>
+    </lightning-card>
+
+    <!-- Modal -->
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Header -->
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium">Select Fields for {selectedObject}</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeFieldModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                    </button>
+                </header>
+
+                <!-- Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-dual-listbox
+                        name="fieldSelector"
+                        label="Select Fields"
+                        source-label="Available Fields"
+                        selected-label="Selected Fields"
+                        field-level-help="Choose which fields you want to display in the table."
+                        options={fieldOptions}
+                        value={selectedFields}
+                        onchange={handleFieldSelection}>
+                    </lightning-dual-listbox>
+                </div>
+
+                <!-- Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="neutral" label="Cancel" onclick={closeFieldModal}></lightning-button>
+                    <lightning-button variant="brand" label="Load Records" onclick={loadRecords}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
