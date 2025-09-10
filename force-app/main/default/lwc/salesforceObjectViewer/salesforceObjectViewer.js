@@ -14,8 +14,8 @@ export default class SalesforceObjectViewer extends LightningElement {
     @track data = [];
     @track draftValues = [];
     @track noRecords = false;
-
-    // Modal state
+    @track error;
+  
     @track isModalOpen = false;
 
     offset = 0;
@@ -43,7 +43,7 @@ export default class SalesforceObjectViewer extends LightningElement {
 
         try {
             const fields = await getFields({ objectName: this.selectedObject });
-            this.fieldOptions = fields.map(f => ({ label: f.label, value: f.apiName }));
+            this.fieldOptions = fields.map(f => ({ label: f.label, value: f.apiName,editable : f.editable }));
         } catch (error) {
             this.showToast('Error', 'Unable to fetch fields', 'error');
         }
@@ -62,25 +62,25 @@ export default class SalesforceObjectViewer extends LightningElement {
     }
 
     async loadRecords() {
-    this.offset = 0;  // reset when loading first time
+    this.offset = 0; 
     try {
         const records = await getRecords({
             objectName: this.selectedObject,
             fieldList: this.selectedFields,
-            limitSize: this.limit,     // fetch 10
+            limitSize: this.limit,    
             offsetSize: this.offset
         });
 
-        this.data = records;                // first 10
+        this.data = records;        
         this.noRecords = (records.length === 0);
 
         this.columns = this.selectedFields.map(field => ({
             label: this.fieldOptions.find(f => f.value === field).label,
             fieldName: field,
-            editable: true
+           editable: this.fieldOptions.find(f => f.value === field).editable === 'false' ? false : true
         }));
 
-        this.isModalOpen = false; // close modal
+        this.isModalOpen = false;
     } catch (error) {
         this.showToast('Error', 'Unable to fetch records', 'error');
     }
@@ -99,8 +99,8 @@ export default class SalesforceObjectViewer extends LightningElement {
     }
 
   async handleLoadMore() {
-    this.isLoading = true; // show spinner
-    this.offset += this.limit;  // move to next batch
+    this.isLoading = true;
+    this.offset += this.limit; 
 
     try {
         const moreData = await getRecords({
@@ -110,12 +110,12 @@ export default class SalesforceObjectViewer extends LightningElement {
             offsetSize: this.offset
         });
 
-        // artificial delay (2 seconds)
+      
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         this.data = [...this.data, ...moreData];
 
-        // Stop infinite loading if fewer than limit
+       
         if (moreData.length < this.limit) {
             const table = this.template.querySelector('lightning-datatable');
             if (table) {
@@ -123,10 +123,9 @@ export default class SalesforceObjectViewer extends LightningElement {
             }
         }
     } catch (error) {
-        this.showToast('Error', 'Error loading more data', 'error');
-    } finally {
-        this.isLoading = false; // hide spinner
+        this.showToast('Error', 'Failed to load more records', 'error');
     }
+    this.isLoading = false;
 }
 
 
@@ -136,3 +135,4 @@ export default class SalesforceObjectViewer extends LightningElement {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
 }
+

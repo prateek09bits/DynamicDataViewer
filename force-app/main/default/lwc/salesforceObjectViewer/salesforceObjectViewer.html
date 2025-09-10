@@ -1,5 +1,12 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 09-10-2025
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
-    <lightning-card title="dynamic Object Explorer from dev">
+    <lightning-card title="Dynamic Object Explorer">
         <div class="slds-m-around_medium">
             <!-- Object Selector -->
             <lightning-combobox
@@ -24,15 +31,15 @@
             <!-- Data Table -->
             <template if:true={data.length}>
                <lightning-datatable
-    key-field="Id"
-    data={data}
-    columns={columns}
-    draft-values={draftValues}
-    onsave={handleSave}
-    onloadmore={handleLoadMore}
-    enable-infinite-loading
-    is-loading={isLoading}> 
-</lightning-datatable>
+                key-field="Id"
+                data={data}
+                columns={columns}
+                draft-values={draftValues}
+                onsave={handleSave}
+                onloadmore={handleLoadMore}
+                enable-infinite-loading
+                is-loading={isLoading}> 
+            </lightning-datatable>
 
             </template>
 
@@ -81,3 +88,4 @@
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
 </template>
+
