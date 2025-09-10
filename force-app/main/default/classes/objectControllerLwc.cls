@@ -8,6 +8,7 @@
 public with sharing class objectControllerLwc {
    // Method to get all standard and custom objects that are accessible
    // and queryable
+   // Returns a list of object API names
  @AuraEnabled(cacheable=true)
     public static List<String> getAllObjects() {
         try
