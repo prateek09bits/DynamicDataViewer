@@ -69,9 +69,9 @@ public with sharing class salesforceObjectViewerController {
     public static string updateRecords(List<SObject> updatedData) {
       
         try{
-                
-                update updatedData;
-      			return 'done';
+            if (updatedData == null || updatedData.isEmpty()) return null;
+           Database.update(updatedData, false);
+              return 'done';
         }
         catch(exception e)
         {

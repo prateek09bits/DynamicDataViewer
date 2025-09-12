@@ -19,7 +19,7 @@ public class salesforceObjectViewerControllerTest {
     }   
 
      @isTest 
-    static void PositivegetAllObjectsTest() {
+    static void Positive_getAllObjectsTest() {
         user u = [SELECT Id FROM User WHERE name = 'testing user' LIMIT 1];
  
          System.runAs(u) {
@@ -29,7 +29,7 @@ public class salesforceObjectViewerControllerTest {
     }
 
     @isTest
-    static void PostivegetFieldsTest() {
+    static void Postive_getFieldsTest() {
         user u = [SELECT Id FROM User WHERE name = 'testing user' LIMIT 1];
  
             System.runAs(u) {
@@ -39,7 +39,7 @@ public class salesforceObjectViewerControllerTest {
         }
    
     @isTest
-    static void PostivegetRecordsTest() {
+    static void Postive_getRecordsTest() {
         user u = [SELECT Id FROM User WHERE name = 'testing user' LIMIT 1];
  
           System.runAs(u) {
@@ -50,7 +50,7 @@ public class salesforceObjectViewerControllerTest {
     }
     
  @isTest
-    static void PostiveUpdateRecord() {
+    static void Postive_updateRecord() {
         // Query accounts from @TestSetup
         List<Account> accs = [SELECT Id, Name FROM Account LIMIT 2];
 
@@ -69,7 +69,7 @@ public class salesforceObjectViewerControllerTest {
     
     
     @isTest
-    static void NegativeGetFields()
+    static void Negative_getFields()
     { 
         List<Map<String, String>> fields = objectControllerLwc.getFields('not');
         System.assert(fields == NULL, 'No fields returned for Account');
@@ -77,14 +77,14 @@ public class salesforceObjectViewerControllerTest {
 		
     }
    	@isTest
-    static void NegativeGetRecordsTest() {
+    static void Negative_getRecordsTest() {
             List<String> fields = new List<String>{'contactId', 'Name'};
             List<SObject> records = objectControllerLwc.getRecords('Account', fields, 5, 0);
             System.assert(records == null, 'Incorrect number of records returned');
         
     }
      @isTest
-    static void NegativeUpdate()
+    static void Negative_updateRecords()
     {
         List<Sobject> accounts = new List<sobject>();
         for(Integer i=0; i<10; i++){
