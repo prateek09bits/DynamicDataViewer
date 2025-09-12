@@ -70,8 +70,8 @@ public with sharing class salesforceObjectViewerController {
       
         try{
             if (updatedData == null || updatedData.isEmpty()) return null;
-           Database.update(updatedData, false);
-              return 'done';
+            update updatedData;
+            return 'done';
         }
         catch(exception e)
         {
