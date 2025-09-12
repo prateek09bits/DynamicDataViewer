@@ -2,32 +2,26 @@
  * @description       : 
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             : 
- * @last modified on  : 09-10-2025
+ * @last modified on  : 09-12-2025
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 public with sharing class objectControllerLwc {
    // Method to get all standard and custom objects that are accessible
-   // and queryable
-   
-    //for local dev only 
  @AuraEnabled(cacheable=true)
     public static List<String> getAllObjects() {
-        try
-        {
-        List<String> objects = new List<String>();
+                List<String> objects = new List<String>();
         for (Schema.SObjectType sObj : Schema.getGlobalDescribe().values()) {
             Schema.DescribeSObjectResult res = sObj.getDescribe();
-            if (res.isQueryable()) {
+            if (res.isAccessible()) {
                 objects.add(res.getName());
             }
         }
+        if(objects.size()>0)
+        {
         objects.sort();
+        }
         return objects;
-    }
-    catch(Exception e){
-        System.debug('Error: ' + e.getMessage());
-        return null;
-    }
+        
     }
 
     @AuraEnabled(cacheable=true)
@@ -48,27 +42,42 @@ public with sharing class objectControllerLwc {
                 }
                 return fieldList;
         }
-        catch(Exception e){
-            System.debug('Error: ' + e.getMessage());
+        catch(exception e)
+        {
+             System.debug('error');
+            return null;
+        }
+        
+    }
+
+    @AuraEnabled
+    public static List<SObject> getRecords(String objectName, List<String> fieldList, Integer limitSize, Integer offsetSize) {
+        try{
+                    if (fieldList == null || fieldList.isEmpty()) return new List<SObject>();
+                    String query = 'SELECT ' + String.join(fieldList, ',') + ' FROM ' + objectName +
+                                   ' LIMIT ' + limitSize + ' OFFSET ' + offsetSize;
+                    return Database.query(query);
+        }
+        catch(exception e)
+        {
+             System.debug('error');
             return null;
         }
     }
 
     @AuraEnabled
-    public static List<SObject> getRecords(String objectName, List<String> fieldList, Integer limitSize, Integer offsetSize) {
-        if (fieldList == null || fieldList.isEmpty()) return new List<SObject>();
-        String query = 'SELECT ' + String.join(fieldList, ',') + ' FROM ' + objectName +
-                       ' LIMIT ' + limitSize + ' OFFSET ' + offsetSize;
-        return Database.query(query);
-    }
-
-    @AuraEnabled
-    public static void updateRecords(List<SObject> updatedData, String objectName) {
-        if (updatedData == null || updatedData.isEmpty()) return;
-        List<SObject> sObjectsToUpdate = new List<SObject>();
-        for (SObject record : updatedData) {
-            sObjectsToUpdate.add(record);
+    public static string updateRecords(List<SObject> updatedData) {
+      
+        try{
+                
+                update updatedData;
+      			return 'done';
         }
-        update sObjectsToUpdate;
+        catch(exception e)
+        {
+            return null;
+        }
+          
+        
     }
 }
