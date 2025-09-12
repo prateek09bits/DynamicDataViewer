@@ -9,7 +9,7 @@ public with sharing class objectControllerLwc {
    // Method to get all standard and custom objects that are accessible
  @AuraEnabled(cacheable=true)
     public static List<String> getAllObjects() {
-                List<String> objects = new List<String>();
+        List<String> objects = new List<String>();
         for (Schema.SObjectType sObj : Schema.getGlobalDescribe().values()) {
             Schema.DescribeSObjectResult res = sObj.getDescribe();
             if (res.isAccessible()) {
@@ -18,7 +18,7 @@ public with sharing class objectControllerLwc {
         }
         if(objects.size()>0)
         {
-        objects.sort();
+            objects.sort();
         }
         return objects;
         
@@ -45,7 +45,7 @@ public with sharing class objectControllerLwc {
         catch(exception e)
         {
              System.debug('error');
-            return null;
+             return null;
         }
         
     }
@@ -60,8 +60,8 @@ public with sharing class objectControllerLwc {
         }
         catch(exception e)
         {
-             System.debug('error');
-            return null;
+                    System.debug('error');
+                    return null;
         }
     }
 
